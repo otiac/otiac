@@ -40,7 +40,7 @@ OTIAC_GUI {
 
 
 	*folderImages {
-		^Platform.userExtensionDir +/+ "OTIAC/otiac_gui_images";
+		^Platform.userConfigDir+/+"downloaded-quarks/otiac/OTIAC/otiac_gui_images/";
 	}
 
 	// Check if dependencies are available
