@@ -760,9 +760,9 @@ OTIAC_GUI {
 		}, midiButtons[1]).permanent_(true); // oracle generation
 
 		MIDIdef.noteOn(\button3, {|v| var value = v/127;
-			if(activeButton[2] == 0, {~oracle.setAutoRebuild(30); "Oracle AutoRebuild ON".postln; activeButton[2] = 1}, {~oracle.setAutoRebuild(0); "Oracle AutoRebuild OFF".postln; activeButton[2] = 0});
+			if(activeButton[2] == 0, {~oracle.setAutoRebuild(30); "Turn FO AutoUpdate ON".postln; activeButton[2] = 1}, {~oracle.setAutoRebuild(0); "Turn FO AutoUpdate OFF".postln; activeButton[2] = 0});
 			{buttonGUI[2].value_(activeButton[2])}.defer;
-		}, midiButtons[2]).permanent_(true); // oracle autorebuild
+		}, midiButtons[2]).permanent_(true); // oracle autoupdate
 
 		MIDIdef.noteOn(\button4, {|v| var value = v/127;
 			"Forced Costraint A".postlnSpecial;
@@ -821,7 +821,7 @@ OTIAC_GUI {
 		flowWin.shift(analFreqWidth, -75);
 		buttonGUI[0] = Button(window, 95@50).font_(Font(awesomeFont, 16)).states_([["Start\n Listening", Color.black, Color.new255(0, 200, 0)], ["Stop\n Listening", Color.white, Color.red]]);
 		buttonGUI[1] = Button(window, 95@50).font_(Font(awesomeFont, 16)).states_([["Start\n Generation", Color.black, Color.new255(0, 200, 0)], ["Stop\n Generation", Color.white, Color.red]]);
-		buttonGUI[2] = Button(window, 95@50).font_(Font(awesomeFont, 16)).states_([["Start FO\n AutoRebuild", Color.black, Color.new255(0, 200, 0)], ["Stop FO\n AutoRebuild", Color.white, Color.red]]); //.valueAction_(1);
+		buttonGUI[2] = Button(window, 95@50).font_(Font(awesomeFont, 16)).states_([["Start FO\n AutoUpdate", Color.black, Color.new255(0, 200, 0)], ["Stop FO\n AutoUpdate", Color.white, Color.red]]); //.valueAction_(1);
 		buttonGUI[3] = Button(window, 95@50).font_(Font(awesomeFont, 16)).states_([["Force\n Constraint A", Color.black, Color.new255(0, 200, 0)], ["Forced\n Constraint A", Color.black, Color.yellow]]);
 		buttonGUI[4] = Button(window, 95@50).font_(Font(awesomeFont, 16)).states_([["Force\n Constraint B", Color.black, Color.new255(0, 200, 0)], ["Forced\n Constraint B", Color.black, Color.yellow]]);
 		buttonGUI[5] = Button(window, 95@50).font_(Font(awesomeFont, 16)).states_([["Force\n Constraint C", Color.black, Color.new255(0, 200, 0)], ["Forced\n Constraint C", Color.black, Color.yellow]]);
@@ -913,7 +913,7 @@ OTIAC_GUI {
 		}, midiButtons[1]).permanent_(true);
 
 		MIDIdef.noteOn(\button3, {|v| var value = v/127;
-			if(activeButton[2] == 0, {~oracle.setAutoRebuild(30); "Oracle AutoRebuild ON".postln; activeButton[2] = 1}, {~oracle.setAutoRebuild(0); "Oracle AutoRebuild OFF".postln; activeButton[2] = 0});
+			if(activeButton[2] == 0, {~oracle.setAutoRebuild(30); "Turn FO AutoUpdate ON".postln; activeButton[2] = 1}, {~oracle.setAutoRebuild(0); "Turn FO AutoUpdate OFF".postln; activeButton[2] = 0});
 			{buttonGUI[2].value_(activeButton[2])}.defer;
 		}, midiButtons[2]).permanent_(true);
 
