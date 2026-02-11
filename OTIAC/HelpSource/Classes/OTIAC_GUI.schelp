@@ -1,0 +1,280 @@
+TITLE:: OTIAC_GUI
+summary:: GUI and controls for OTIAC - O totan int a chitarr
+categories:: GUI, Live Coding, Machine Learning
+related:: Classes/OTIAC, Classes/OTIAC_synths, Classes/FactorOracle
+
+DESCRIPTION::
+OTIAC_GUI is a comprehensive graphical user interface for controlling OTIAC - O totan int a chitarr, an interactive acoustic feedback system for guitar and electronics.
+
+The system combines real-time audio processing, machine learning (Self-Organizing Maps), and algorithmic composition (Factor Oracle) to create complex feedback-based performances.
+
+The GUI provides control over:
+list::
+## Audio routing and monitoring (input/output devices, channel assignments)
+## MIDI controller mapping for performance parameters
+## Factor Oracle playback and generation settings
+## Multiple resonance frequencies and feedback constraints
+## Level controls for different signal paths
+::
+
+subsection:: Dependencies
+
+OTIAC_GUI requires the following extensions and classes:
+list::
+## strong::JSONlib:: For saving and loading configuration presets
+## strong::SOM:: Self-Organizing Map implementation for audio clustering
+## strong::FluCoMa:: Fluid Corpus Manipulation library for audio analysis (https://www.flucoma.org/)
+## strong::FactorOracle:: Factor Oracle implementation for sequence generation
+## strong::OTIAC:: Core OTIAC audio engine class
+## strong::OTIAC_synths:: SynthDef definitions for the OTIAC system
+## strong::FreqScopeView:: Custom frequency scope visualization
+::
+
+If any dependencies are missing, OTIAC_GUI will display a helpful dialog with installation instructions while still allowing you to proceed if desired.
+
+subsection:: Quick Start
+
+code::
+// Create OTIAC_GUI with default settings
+~gui = OTIAC_GUI.new;
+
+// Create OTIAC_GUI and load a saved configuration
+~gui = OTIAC_GUI.new("~/Desktop/test_setup.json".standardizePath);
+
+// Create with specific server
+~gui = OTIAC_GUI.new(server: Server.local);
+::
+
+
+CLASSMETHODS::
+
+METHOD:: new
+Creates a new OTIAC_GUI instance with optional preset loading.
+
+ARGUMENT:: jsonSetupFile
+Optional path to a JSON configuration file containing saved settings for MIDI mappings, audio routing, and resonance frequencies. If provided, these settings will be loaded automatically when the setup window opens.
+
+ARGUMENT:: server
+The audio server to use. Defaults to code::Server.default:: if not specified.
+
+returns:: An OTIAC_GUI instance, or code::nil:: if critical dependencies are missing and user chooses not to proceed.
+
+DISCUSSION::
+The constructor automatically checks for all required dependencies before creating the GUI. If dependencies are missing, a dialog window appears listing what needs to be installed. You can choose to proceed anyway (useful for viewing the interface) or cancel.
+
+METHOD:: folderImages
+Returns the path to the folder containing GUI image assets.
+
+returns:: A string path to the images folder within the OTIAC extension directory.
+
+METHOD:: dependencyCheck
+Checks if all required dependencies are available in the system.
+
+ARGUMENT:: proceedFunc
+A function to execute if all dependencies are present, typically the actual GUI creation function.
+
+returns:: code::true:: if all dependencies are available, code::false:: otherwise.
+
+DISCUSSION::
+This method checks for: JSONlib, SOM, FluCoMa, FactorOracle, and OTIAC. It's called automatically by code::new:: but can be used independently for diagnostics.
+
+METHOD:: showDependencyError
+Displays a dialog window showing missing dependencies with installation instructions.
+
+ARGUMENT:: missingDeps
+A list of missing dependency names.
+
+ARGUMENT:: proceedFunc
+A function to execute if the user chooses to proceed despite missing dependencies.
+
+returns:: code::nil::
+
+DISCUSSION::
+The dialog provides specific installation instructions for each missing component and offers two options: "OK" to cancel, or "Don't sweat it, bring me to the patch" to proceed anyway.
+
+EXAMPLES::
+
+subsection:: Basic Usage
+
+code::
+// Create OTIAC_GUI with default settings
+~gui = OTIAC_GUI.new;
+
+// Create OTIAC_GUI and load a saved configuration
+~gui = OTIAC_GUI.new("~/Desktop/test_setup.json".standardizePath);
+
+// Create with specific server
+~gui = OTIAC_GUI.new(server: Server.local);
+::
+
+subsection:: Setup Workflow
+
+code::
+// 1. Create the GUI
+~gui = OTIAC_GUI.new;
+
+// 2. Configure in the setup window:
+//    - Select your audio interface
+//    - Boot the server
+//    - Configure MIDI controller numbers
+//    - Set audio channel routing
+//    - Define resonance frequencies
+//    - Save configuration for future use
+
+// 3. Initialize the SOM (Self-Organizing Map)
+//    Click "(3) Initialize SOM" button in main window
+
+// 4. Start the synths and timer
+//    Click "(4) Start synths and timer" button
+
+// 5. Control via MIDI or GUI knobs/buttons
+//
+	// 6. Optionally test the feedback by clicking on "(2b) Fb test"
+::
+
+subsection:: Calibration Process
+
+code::
+// Before performing, calibrate the feedback system:
+// 1. Click "(2) Calibration" button
+// 2. Adjust input gain until you see "GOOD RANGE" messages
+// 3. If you see "No good -- Increase ^^^", increase input gain
+// 4. If you see "No good -- Decrease vvv", decrease input gain
+// 5. Click "Stop Calibration" when done
+::
+
+subsection:: Saving and Loading Presets
+
+code::
+// Presets are saved/loaded through the setup window
+// They contain all routing, MIDI, and frequency settings
+
+// Load a preset at startup:
+~gui = OTIAC_GUI.new("~/Documents/OTIAC_presets/concert_setup.json".standardizePath);
+
+// Or load via the setup window:
+// Click "Load setup" button and select your JSON file
+
+// Save current settings:
+// Click "Save setup" button and choose a location
+::
+
+subsection:: Using Extension Methods
+
+code::
+// Post to both post window and GUI log
+"Starting performance".postlnSpecial(~cp_logWindow);
+
+// Convert MIDI controller string to array
+"5,6,7,8,9".stringToArray; // returns [5, 6, 7, 8, 9]
+::
+
+subsection:: Programmatic Control
+
+code::
+// Access and modify settings programmatically
+~gui.reson1Field.value_(440);
+~gui.reson2Field.value_(880);
+~gui.reson3Field.value_(1320);
+
+// Update frequency scopes after changing routing
+~gui.updateFreqScopeBuses;
+
+// Update MIDI definitions after changing controller numbers
+~gui.updateMIDIdefs;
+::
+
+subsection:: Performance Controls
+
+The system provides five constraint modes activated by MIDI buttons:
+
+list::
+## strong::Constraint A:: Basic resonant feedback at specified frequencies
+## strong::Constraint B:: Frequency-shifted feedback (2 Hz shift)
+## strong::Constraint C:: Granular synthesis mode with impulse excitation
+## strong::Constraint D:: Complex mixed mode with phase shifting
+## strong::Constraint E:: Slightly detuned resonances (1.2x frequency multiplier)
+::
+
+Each constraint reconfigures the three resonator synths with different parameters optimized for specific sonic characteristics.
+
+SECTION:: Extension Methods
+
+Two utility extension methods are added to the String class:
+
+METHOD:: postlnSpecial
+Posts the string to the post window and displays it in an OTIAC_GUI TextView log window.
+
+ARGUMENT:: logWindow
+The TextView object to display the message in. Defaults to code::~cp_logWindowTwo::.
+
+DISCUSSION::
+This method is used throughout OTIAC for dual logging - both to the standard post window and to the GUI's log displays.
+
+METHOD:: stringToArray
+Converts a comma-separated string of integers into an array.
+
+returns:: An array of integers.
+
+DISCUSSION::
+Example: code::"45, 46, 78".stringToArray:: returns code::[45, 46, 78]::. Used internally for parsing MIDI controller number strings from text fields.
+
+
+SECTION:: Technical Details
+
+subsection:: System Architecture
+
+OTIAC uses several interconnected components:
+list::
+## strong::Contact microphone input:: Placed on the guitar's headstock
+## strong::Transducer output:: Sends processed audio back to the guitar to create feedback loops
+## strong::SOM (Self-Organizing Map):: Clusters audio features for pattern recognition
+## strong::Factor Oracle:: Generates new material based on learned patterns
+## strong::Multiple resonators:: Three independently controllable resonant frequencies
+## strong::Adaptive processing:: Real-time audio analysis and transformation
+## strong::Spatial output:: Stereo speaker output and guitar transducer routing
+::
+
+subsection:: Server Configuration
+
+When booting through the setup window, the server is configured with:
+list::
+## Memory: 2^21 samples
+## Block size: 64 samples
+## Max nodes: 8000
+## Wire buffers: 256
+## Total buffers: 2048
+## Sample rate: 48000 Hz
+## Output channels: 10
+## Input channels: 10
+::
+
+subsection:: Audio Signal Flow
+
+code::
+Contact Mic → [OTIAC Synths] → Transducer (feedback)
+                      ↓
+              Factor Oracle → Speakers (L/R)
+                      ↓
+              Monitoring Bus
+::
+
+The system creates four main synthesis chains:
+list::
+## Three resonator synths (code::\otiac::) - each targeting one resonance frequency
+## One adaptive processing synth (code::\otiacAdapt::)
+## A mixer synth (code::\otiac_mixer::) - routing to all outputs
+## A timer synth (code::\timerSynth::) - for performance timing
+::
+
+subsection:: Machine Learning Integration
+
+The Factor Oracle (code::~oracle::) learns from incoming audio and generates new material based on:
+list::
+## Audio features extracted via FluCoMa (MFCC, spectral shape, pitch, loudness)
+## Self-Organizing Map clustering (10x10 grid = 100 clusters)
+## Sequence learning and generation with controllable continuity
+## Automatic rebuilding at regular intervals
+::
+
+
