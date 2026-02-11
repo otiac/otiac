@@ -385,11 +385,11 @@ OTIAC {
 
 		eventList.add(completeEvent);
 
-		// Auto-rebuild oracle if enabled
+		// Auto-update oracle if enabled
 		if (autoRebuildInterval > 0 and: { eventList.size >= 3 }) {
 			if (eventList.size % autoRebuildInterval == 0) {
 				this.buildOracle;
-				("Oracle auto-rebuilt with % events".format(eventList.size)).postlnSpecial;
+				("Oracle auto-update with % events".format(eventList.size)).postlnSpecial;
 			};
 		};
 
@@ -689,7 +689,7 @@ OTIAC {
 		("SOM: % x % (% nodes)".format(somNetSize, somNetSize, somNumNodes)).postlnSpecial;
 		("Continuity: %".format(continuity)).postlnSpecial;
 		("Generation interval: %s".format(generationInterval)).postlnSpecial;
-		("Auto-rebuild: %".format(
+		("Auto-update: %".format(
 			if (autoRebuildInterval > 0) {
 				"every % events".format(autoRebuildInterval)
 			} { "manual only" }
@@ -815,9 +815,9 @@ OTIAC {
 	setAutoRebuild { |interval|
 		autoRebuildInterval = interval;
 		if (interval > 0) {
-			("Auto-rebuild enabled: every % events".format(interval)).postlnSpecial;
+			("Auto-update enabled: every % events".format(interval)).postlnSpecial;
 		} {
-			"Auto-rebuild disabled (manual only)".postlnSpecial;
+			"Auto-update disabled (manual only)".postlnSpecial;
 		};
 	}
 
